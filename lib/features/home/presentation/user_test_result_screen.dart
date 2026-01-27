@@ -82,18 +82,18 @@ class UserTestResultScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                   FadeInAnimation(
-                     delay: const Duration(milliseconds: 400),
-                     child: _buildStatItem(context, "Correct", correctAnswers, Colors.green),
-                   ),
-                   FadeInAnimation(
-                     delay: const Duration(milliseconds: 500),
-                     child: _buildStatItem(context, "Incorrect", incorrectAnswers, colorScheme.error),
-                   ),
-                   FadeInAnimation(
-                     delay: const Duration(milliseconds: 600),
-                     child: _buildStatItem(context, "Skipped", unanswered, Colors.orange),
-                   ),
+                    FadeInAnimation(
+                      delay: const Duration(milliseconds: 400),
+                      child: _buildStatItem(context, "Correct", correctAnswers, const Color(0xFF4CAF50)), // Standard Green
+                    ),
+                    FadeInAnimation(
+                      delay: const Duration(milliseconds: 500),
+                      child: _buildStatItem(context, "Incorrect", incorrectAnswers, colorScheme.error),
+                    ),
+                    FadeInAnimation(
+                      delay: const Duration(milliseconds: 600),
+                      child: _buildStatItem(context, "Skipped", unanswered, colorScheme.secondary),
+                    ),
                 ],
               ),
               const SizedBox(height: 40),
@@ -209,7 +209,7 @@ class _DonutChartPainter extends CustomPainter {
     // Correct Segment
     if (correct > 0) {
       double sweep = (correct / total) * 2 * pi;
-      paint.color = Colors.green;
+      paint.color = const Color(0xFF4CAF50); // Consistent Green
       canvas.drawArc(rect, startAngle, sweep, false, paint);
       startAngle += sweep;
     }
@@ -225,7 +225,7 @@ class _DonutChartPainter extends CustomPainter {
     // Unanswered Segment
     if (unanswered > 0) {
       double sweep = (unanswered / total) * 2 * pi;
-      paint.color = Colors.orange.withOpacity(0.5);
+      paint.color = theme.colorScheme.secondary.withOpacity(0.5);
       canvas.drawArc(rect, startAngle, sweep, false, paint);
       startAngle += sweep;
     }

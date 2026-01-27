@@ -132,11 +132,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 Expanded(
                   child: Column(
                     children: [
-                       _buildActionTile(context, "Clear App Cache", Icons.cleaning_services_rounded, Colors.orange),
+                       _buildActionTile(context, "Clear App Cache", Icons.cleaning_services_rounded, colorScheme.secondary),
                        const SizedBox(height: 12),
-                       _buildActionTile(context, "System Logs", Icons.terminal_rounded, Colors.blueGrey),
+                       _buildActionTile(context, "System Logs", Icons.terminal_rounded, colorScheme.outline),
                        const SizedBox(height: 12),
-                       _buildActionTile(context, "Backup Database", Icons.cloud_upload_rounded, Colors.blue),
+                       _buildActionTile(context, "Backup Database", Icons.cloud_upload_rounded, colorScheme.primary),
                     ],
                   ),
                 ),

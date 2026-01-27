@@ -30,9 +30,10 @@ class _UserMainScreenState extends State<UserMainScreen> {
 
   void _syncOnStartup() async {
     // Refresh all data from server if online
-    await _repo.fetchRemoteToLocal(widget.userId!);
-    await _repo.fetchBookmarksToLocal(widget.userId!);
-    await _repo.fetchLevelStatesToLocal(widget.userId!);
+    final String cleanId = DataRepository.parseId(widget.userId);
+    await _repo.fetchRemoteToLocal(cleanId);
+    await _repo.fetchBookmarksToLocal(cleanId);
+    await _repo.fetchLevelStatesToLocal(cleanId);
     if (mounted) setState(() {}); // Refresh UI with new data
   }
 
@@ -122,14 +123,11 @@ class _UserMainScreenState extends State<UserMainScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            "GK",
-            style: TextStyle(
-              color: colorScheme.primary,
-              fontWeight: FontWeight.normal,
-              fontSize: 24,
-            ),
+          title: Image.asset(
+            'assets/logos/gk_rank_logo_300x50.png',
+            height: 32,
           ),
+          centerTitle: false,
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 8.0),

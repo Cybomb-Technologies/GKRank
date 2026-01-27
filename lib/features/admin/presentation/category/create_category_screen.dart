@@ -16,11 +16,13 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
 
   Future<void> _saveCategory() async {
     final name = _nameController.text.trim();
+    final colorScheme = Theme.of(context).colorScheme;
+
     if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Please enter a category name"),
-          backgroundColor: Colors.orange,
+        SnackBar(
+          content: const Text("Please enter a category name"),
+          backgroundColor: colorScheme.secondary,
         ),
       );
       return;
@@ -34,7 +36,7 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Category '$name' created successfully"),
-            backgroundColor: Colors.green.shade600,
+            backgroundColor: colorScheme.primary,
           ),
         );
         Navigator.pop(context);
@@ -44,7 +46,7 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Error: ${e.toString()}"),
-            backgroundColor: Colors.red,
+            backgroundColor: colorScheme.error,
           ),
         );
       }
@@ -78,7 +80,7 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
               color: colorScheme.primary.withOpacity(0.05),
               child: Row(
                 children: [
-                  Container(
+                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: colorScheme.primary.withOpacity(0.1),
@@ -206,4 +208,3 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
     );
   }
 }
-

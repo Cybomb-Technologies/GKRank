@@ -60,11 +60,11 @@ class MyApp extends StatelessWidget {
             return Stack(
               children: [
                 child!, // This represents your screens (Login, Home, etc.)
-                Positioned(
-                  top: MediaQuery.of(context).padding.top + 64,
-                  right: 32,
-                  child: const FloatingThemeToggle(),
-                ),
+                // Positioned(
+                //   top: MediaQuery.of(context).padding.top + 64,
+                //   right: 32,
+                //   child: const FloatingThemeToggle(),
+                // ),
               ],
             );
           },
@@ -112,7 +112,7 @@ class FloatingThemeToggle extends StatelessWidget {
         child: IconButton(
           icon: Icon(
             isDark ? Icons.light_mode : Icons.dark_mode,
-            color: isDark ? Colors.yellow : Colors.blueGrey,
+            color: isDark ? AppColors.brandOrange : Colors.blueGrey,
           ),
           onPressed: () => ThemeController.toggleTheme(),
         ),

@@ -107,9 +107,8 @@ class _UserResultsScreenState extends State<UserResultsScreen> {
                           itemBuilder: (context, index) {
                             final b = bookmarks[index];
                             return ListTile(
-                              title: Text(b['topic']?.toString() ?? "Unknown Topic"), // Changed 'topicName' to 'topic'
-                              subtitle: Text("Level: ${b['level'] ?? 'N/A'}"),       // Added level for clarity
-                              trailing: Text("Score: ${b['score'] ?? 0}"),          // Fixed null score
+                              title: Text(b['question']?.toString() ?? "Unknown Question"), 
+                              subtitle: Text("Topic: ${b['topic'] ?? 'N/A'} | Level: ${b['levelName'] ?? 'N/A'}"),
                             );
                           },
                         );

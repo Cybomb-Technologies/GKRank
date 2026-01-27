@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/premium_card.dart';
 
 class TestReviewScreen extends StatelessWidget {
@@ -16,8 +17,8 @@ class TestReviewScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Review Answers"),
-        backgroundColor: Colors.red,
-        foregroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.error,
+        foregroundColor: Theme.of(context).colorScheme.onError,
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
@@ -30,8 +31,8 @@ class TestReviewScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 16),
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
+            backgroundColor: Theme.of(context).colorScheme.error,
+            foregroundColor: Theme.of(context).colorScheme.onError,
           ),
           child: const Text("Back to Results", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         ),
@@ -62,14 +63,14 @@ class TestReviewScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.1),
+                    color: Theme.of(context).colorScheme.error.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     "Q ${index + 1}",
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Colors.red,
+                      color: Theme.of(context).colorScheme.error,
                       fontSize: 14,
                     ),
                   ),
@@ -78,7 +79,9 @@ class TestReviewScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: isCorrect ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+                      color: isCorrect 
+                          ? const Color(0xFF2EC4B6).withOpacity(0.1) 
+                          : Theme.of(context).colorScheme.error.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
@@ -86,7 +89,7 @@ class TestReviewScreen extends StatelessWidget {
                       children: [
                         Icon(
                           isCorrect ? Icons.check_circle : Icons.cancel,
-                          color: isCorrect ? Colors.green : Colors.red,
+                          color: isCorrect ? const Color(0xFF2EC4B6) : Theme.of(context).colorScheme.error,
                           size: 18,
                         ),
                         const SizedBox(width: 6),
@@ -94,7 +97,7 @@ class TestReviewScreen extends StatelessWidget {
                           isCorrect ? "Correct" : "Wrong",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: isCorrect ? Colors.green : Colors.red,
+                            color: isCorrect ? const Color(0xFF2EC4B6) : Theme.of(context).colorScheme.error,
                             fontSize: 13,
                           ),
                         ),
@@ -144,15 +147,15 @@ class TestReviewScreen extends StatelessWidget {
               String? label;
               
               if (isCorrectOption) {
-                bgColor = Colors.green.withOpacity(0.15);
-                borderColor = Colors.green;
+                bgColor = const Color(0xFF2EC4B6).withOpacity(0.15); // Brand Teal
+                borderColor = const Color(0xFF2EC4B6);
                 icon = Icons.check_circle;
                 label = "Correct Answer";
               }
               
               if (isUserSelected && !isCorrect) {
-                bgColor = Colors.red.withOpacity(0.15);
-                borderColor = Colors.red;
+                bgColor = Theme.of(context).colorScheme.error.withOpacity(0.15);
+                borderColor = Theme.of(context).colorScheme.error;
                 icon = Icons.cancel;
                 label = "Your Answer";
               }
@@ -211,22 +214,20 @@ class TestReviewScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: Colors.amber.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.amber.withOpacity(0.3)),
+                  border: Border.all(color: AppColors.brandOrange.withOpacity(0.3)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Row(
                       children: [
-                        Icon(Icons.lightbulb_outline, color: Colors.amber, size: 18),
+                        Icon(Icons.lightbulb_outline, color: AppColors.brandOrange, size: 18),
                         SizedBox(width: 8),
                         Text(
                           "EXPLANATION",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Colors.amber,
+                            color: AppColors.brandOrange,
                             fontSize: 11,
                             letterSpacing: 1.0,
                           ),

@@ -163,7 +163,9 @@ class _UserTopicsScreenState extends State<UserTopicsScreen> with SingleTickerPr
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     
-    Color modeColor = mode == "Learn" ? Colors.blue : (mode == "Practice" ? Colors.orange : Colors.red);
+    Color modeColor = mode == "Learn" 
+        ? colorScheme.primary 
+        : (mode == "Practice" ? colorScheme.secondary : colorScheme.error);
 
     if (_topics.isEmpty) {
       return Center(
@@ -228,7 +230,7 @@ class _UserTopicsScreenState extends State<UserTopicsScreen> with SingleTickerPr
                       ),
                     ),
                     if (isCompleted)
-                      const Icon(Icons.check_circle, color: Colors.green, size: 24),
+                       Icon(Icons.check_circle, color: colorScheme.primary, size: 24),
                   ],
                 ),
                 // Mode completion indicators

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../core/api.dart';
 import '../../../core/data_repository.dart';
+import '../../../core/theme/app_colors.dart';
 import 'user_test_result_screen.dart';
 import 'test_review_screen.dart';
 
@@ -82,7 +83,8 @@ class _UserLevelQuestionsScreenState extends State<UserLevelQuestionsScreen> {
     final user = await _dataRepo.getUserSession();
     if (user != null) {
       try {
-        final bookmarks = await _apiService.getUserBookmarks(user['_id']);
+        final cleanId = DataRepository.parseId(user['_id']);
+        final bookmarks = await _apiService.getUserBookmarks(cleanId);
         if (mounted) {
           final List data = bookmarks.data;
           setState(() {
@@ -112,42 +114,22 @@ class _UserLevelQuestionsScreenState extends State<UserLevelQuestionsScreen> {
   Future<void> _toggleBookmark(int index) async {
     final q = _questions[index];
     final qId = (q['id'] ?? q['_id']).toString();
-    final user = await _dataRepo.getUserSession();
+    
+    await _dataRepo.toggleBookmark(
+      Map<String, dynamic>.from(q),
+      category: widget.category,
+      subCategory: widget.subCategory,
+      topic: widget.topicName,
+      levelName: widget.levelName,
+    );
 
-    if (user == null) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please login to bookmark questions")),
-        );
+    setState(() {
+      if (_bookmarkedIds.contains(qId)) {
+        _bookmarkedIds.remove(qId);
+      } else {
+        _bookmarkedIds.add(qId);
       }
-      return;
-    }
-
-    if (_bookmarkedIds.contains(qId)) {
-      await _apiService.removeBookmark(user['_id'], qId);
-      setState(() => _bookmarkedIds.remove(qId));
-    } else {
-      // --- REPLACE THE OLD addBookmark CALL WITH THIS ---
-      try {
-        await _apiService.addBookmark({
-          "userId": user['_id'],               // Use user['_id'] from your session
-          "questionId": qId,                  // The question's ID
-          "topic": widget.topicName,          // From the widget parameters
-          "level": widget.levelName,          // Use widget.levelName
-          "questionText": q['question'],      // The actual question text
-          "options": q['options'],            // The list of options
-          "correctAnswer": q['answer'],        // Map 'answer' from your question object
-        });
-        setState(() => _bookmarkedIds.add(qId));
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Failed to save bookmark: $e")),
-          );
-        }
-      }
-      // ------------------------------------------------
-    }
+    });
   }
 
   void _startTest() {
@@ -183,7 +165,10 @@ class _UserLevelQuestionsScreenState extends State<UserLevelQuestionsScreen> {
               Navigator.pop(context);
               _submitTest();
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error, 
+              foregroundColor: Theme.of(context).colorScheme.onError
+            ),
             child: const Text("Submit"),
           ),
         ],
@@ -270,10 +255,10 @@ class _UserLevelQuestionsScreenState extends State<UserLevelQuestionsScreen> {
     return correct;
   }
 
-  Color _getModeColor() {
-    if (widget.mode == 'Learn') return Colors.blue;
-    if (widget.mode == 'Practice') return Colors.orange;
-    return Colors.red;
+  Color _getModeColor(ColorScheme colorScheme) {
+    if (widget.mode == 'Learn') return colorScheme.primary;
+    if (widget.mode == 'Practice') return colorScheme.secondary;
+    return colorScheme.error;
   }
 
   @override
@@ -301,17 +286,18 @@ class _UserLevelQuestionsScreenState extends State<UserLevelQuestionsScreen> {
   }
 
   PreferredSizeWidget _buildAppBar() {
-    final modeColor = _getModeColor();
+    final colorScheme = Theme.of(context).colorScheme;
+    final modeColor = _getModeColor(colorScheme);
     
     return AppBar(
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(widget.topicName, style: const TextStyle(fontSize: 16)),
-          Text(
-            "Question ${_currentQuestionIndex + 1}/${_questions.length}",
-            style: TextStyle(fontSize: 13, color: modeColor, fontWeight: FontWeight.bold),
-          ),
+            Text(
+              "Question ${_currentQuestionIndex + 1}/${_questions.length}",
+              style: TextStyle(fontSize: 13, color: colorScheme.error, fontWeight: FontWeight.bold),
+            ),
         ],
       ),
       actions: [
@@ -322,12 +308,12 @@ class _UserLevelQuestionsScreenState extends State<UserLevelQuestionsScreen> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.1),
+                  color: colorScheme.error.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   "${(_remainingSeconds ~/ 60).toString().padLeft(2, '0')}:${(_remainingSeconds % 60).toString().padLeft(2, '0')}",
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colorScheme.error),
                 ),
               ),
             ),
@@ -362,7 +348,8 @@ class _UserLevelQuestionsScreenState extends State<UserLevelQuestionsScreen> {
     final userAnswer = _selectedAnswers[index];
     final correctAnswer = q['answer'];
     final isBookmarked = _bookmarkedIds.contains((q['id'] ?? q['_id']).toString());
-    final modeColor = _getModeColor();
+    final colorScheme = Theme.of(context).colorScheme;
+    final modeColor = _getModeColor(colorScheme);
     
     // Mode-specific flags
     bool showExplanation = false;
@@ -403,7 +390,7 @@ class _UserLevelQuestionsScreenState extends State<UserLevelQuestionsScreen> {
                 IconButton(
                   icon: Icon(
                     isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                    color: isBookmarked ? Colors.amber : null,
+                    color: isBookmarked ? const Color(0xFFFFB300) : null, // Brand-consistent Amber
                   ),
                   onPressed: () => _toggleBookmark(index),
                 ),
@@ -435,20 +422,20 @@ class _UserLevelQuestionsScreenState extends State<UserLevelQuestionsScreen> {
               // Learn mode: Always show correct answer
               if (widget.mode == 'Learn') {
                 if (isCorrect) {
-                  bgColor = Colors.green.withOpacity(0.15);
-                  borderColor = Colors.green;
+                  bgColor = const Color(0xFF2EC4B6).withOpacity(0.15); // Brand Teal
+                  borderColor = const Color(0xFF2EC4B6);
                   icon = Icons.check_circle;
                 }
               }
               // Practice mode: Show feedback after selection
               else if (widget.mode == 'Practice' && userAnswer != null) {
                 if (isCorrect) {
-                  bgColor = Colors.green.withOpacity(0.15);
-                  borderColor = Colors.green;
+                  bgColor = const Color(0xFF2EC4B6).withOpacity(0.15);
+                  borderColor = const Color(0xFF2EC4B6);
                   icon = Icons.check_circle;
                 } else if (isSelected) {
-                  bgColor = Colors.red.withOpacity(0.15);
-                  borderColor = Colors.red;
+                  bgColor = colorScheme.error.withOpacity(0.15);
+                  borderColor = colorScheme.error;
                   icon = Icons.cancel;
                 }
               }
@@ -503,22 +490,20 @@ class _UserLevelQuestionsScreenState extends State<UserLevelQuestionsScreen> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.amber.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.amber.withOpacity(0.3)),
+                  border: Border.all(color: AppColors.brandOrange.withOpacity(0.3)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Row(
                       children: [
-                        Icon(Icons.lightbulb_outline, color: Colors.amber, size: 20),
+                        Icon(Icons.lightbulb_outline, color: AppColors.brandOrange, size: 20),
                         SizedBox(width: 8),
                         Text(
                           "EXPLANATION",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Colors.amber,
+                            color: AppColors.brandOrange,
                             fontSize: 12,
                             letterSpacing: 1.2,
                           ),
@@ -589,12 +574,14 @@ class _UserLevelQuestionsScreenState extends State<UserLevelQuestionsScreen> {
 
   Widget? _buildActionButton() {
     if (_currentQuestionIndex == _questions.length - 1) {
+      final colorScheme = Theme.of(context).colorScheme;
       if (widget.mode == 'Test') {
         return FloatingActionButton.extended(
           onPressed: _showSubmitDialog,
           label: const Text("Submit Test"),
           icon: const Icon(Icons.send),
-          backgroundColor: Colors.red,
+          backgroundColor: colorScheme.error,
+          foregroundColor: colorScheme.onError,
         );
       } else {
         // Learn or Practice
@@ -602,7 +589,7 @@ class _UserLevelQuestionsScreenState extends State<UserLevelQuestionsScreen> {
           onPressed: _markAsComplete,
           label: const Text("Mark as Complete"),
           icon: const Icon(Icons.check_circle),
-          backgroundColor: _getModeColor(),
+          backgroundColor: _getModeColor(colorScheme),
         );
       }
     }
@@ -610,6 +597,7 @@ class _UserLevelQuestionsScreenState extends State<UserLevelQuestionsScreen> {
   }
 
   Widget _buildTestSetup() {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(title: const Text("Start Test")),
       body: Padding(
@@ -627,6 +615,7 @@ class _UserLevelQuestionsScreenState extends State<UserLevelQuestionsScreen> {
               subtitle: const Text("Set a time limit for this test"),
               value: _isTimed,
               onChanged: (val) => setState(() => _isTimed = val),
+              activeColor: colorScheme.error,
             ),
             
             if (_isTimed) ...[
@@ -636,6 +625,7 @@ class _UserLevelQuestionsScreenState extends State<UserLevelQuestionsScreen> {
                  value: _testDurationMinutes.toDouble(),
                  min: 1, max: 60, divisions: 59,
                  label: "$_testDurationMinutes min",
+                 activeColor: colorScheme.error,
                  onChanged: (val) => setState(() => _testDurationMinutes = val.toInt()),
                ),
             ],
@@ -646,8 +636,8 @@ class _UserLevelQuestionsScreenState extends State<UserLevelQuestionsScreen> {
               child: ElevatedButton(
                 onPressed: _startTest,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
+                  backgroundColor: colorScheme.error,
+                  foregroundColor: colorScheme.onError,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: const Text("Start Test Now", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),

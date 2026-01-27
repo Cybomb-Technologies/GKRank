@@ -152,17 +152,16 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
                   Widget logoSection = Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Image.asset(
-                      //   'assets/logo/apti_go_512x512.png',
-                      //   height: isLandscape ? 80 : 120,
-                      //   fit: BoxFit.contain,
-                      // ),
-                      const SizedBox(height: 16),
+                      Image.asset(
+                        'assets/logos/gk_rank_icon_t_512x512.png',
+                        height: isLandscape ? 100 : 150,
+                      ),
+                      const SizedBox(height: 8),
                       Text(
                         "GkRank",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: AppColors.brandOrange,
+                          color: AppColors.brandTeal,
                           fontSize: isLandscape ? 42 : 54,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'serif',
@@ -214,16 +213,12 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
                       const SizedBox(height: 32),
                       ElevatedButton(
                         onPressed: _handleRegister,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: colorScheme.secondary,
-                          foregroundColor: colorScheme.onSecondary,
-                        ),
                         child: const Text("Create Account"),
                       ),
                       const SizedBox(height: 16),
                       OutlinedButton.icon(
                         onPressed: _handleGoogleSignup,
-                        icon: Image.network('https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg', height: 24, width: 24, errorBuilder: (c, e, s) => const Icon(Icons.g_mobiledata, size: 24)),
+                        icon: Image.asset('assets/logos/google_logo_960.png', height: 24, width: 24),
                         label: const Text("Create account with Google"),
                         style: OutlinedButton.styleFrom(
                           side: BorderSide(color: colorScheme.outlineVariant),
@@ -240,7 +235,7 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
                             onPressed: () => Navigator.pop(context),
                             child: Text(
                               "Sign In",
-                              style: TextStyle(color: colorScheme.secondary, fontWeight: FontWeight.bold),
+                              style: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ],

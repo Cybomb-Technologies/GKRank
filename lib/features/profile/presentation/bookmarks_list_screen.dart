@@ -29,7 +29,7 @@ class _BookmarksListScreenState extends State<BookmarksListScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.bookmark_outline, size: 64, color: Colors.grey.shade400),
+                  Icon(Icons.bookmark_outline, size: 64, color: Theme.of(context).colorScheme.outline.withOpacity(0.3)),
                   const SizedBox(height: 16),
                   const Text("No bookmarked questions yet.", style: TextStyle(color: Colors.grey)),
                 ],
@@ -54,16 +54,16 @@ class _BookmarksListScreenState extends State<BookmarksListScreen> {
                         spacing: 8,
                         children: [
                           if (b['category'] != null)
-                             _buildBadge(b['category'], Colors.blue.shade100, Colors.blue.shade800),
+                             _buildBadge(b['category'], Theme.of(context).colorScheme.primaryContainer, Theme.of(context).colorScheme.onPrimaryContainer),
                           if (b['topic'] != null)
-                             _buildBadge(b['topic'], Colors.orange.shade100, Colors.orange.shade800),
+                             _buildBadge(b['topic'], Theme.of(context).colorScheme.secondaryContainer, Theme.of(context).colorScheme.onSecondaryContainer),
                           if (b['levelName'] != null)
-                             _buildBadge(b['levelName'], Colors.green.shade100, Colors.green.shade800),
+                             _buildBadge(b['levelName'], Theme.of(context).colorScheme.tertiaryContainer, Theme.of(context).colorScheme.onTertiaryContainer),
                         ],
                       ),
                     ),
                     trailing: IconButton(
-                      icon: const Icon(Icons.delete_outline, color: Colors.red),
+                      icon: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
                       onPressed: () async {
                         await _repo.toggleBookmark(Map<String, dynamic>.from(b));
                         setState(() {});
