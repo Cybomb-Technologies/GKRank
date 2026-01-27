@@ -38,7 +38,7 @@ class AppTheme {
       colorScheme: colorScheme,
       brightness: Brightness.light,
       appBarTheme: _appBarTheme(colorScheme),
-      cardTheme: _cardThemeData(),
+      cardTheme: _cardThemeData(colorScheme),
       elevatedButtonTheme: _elevatedButtonTheme(colorScheme),
       inputDecorationTheme: _inputDecorationTheme(colorScheme),
       textTheme: _textTheme(colorScheme.onSurface),
@@ -79,7 +79,7 @@ class AppTheme {
       colorScheme: colorScheme,
       brightness: Brightness.dark,
       appBarTheme: _appBarTheme(colorScheme),
-      cardTheme: _cardThemeData(),
+      cardTheme: _cardThemeData(colorScheme),
       elevatedButtonTheme: _elevatedButtonTheme(colorScheme),
       inputDecorationTheme: _inputDecorationTheme(colorScheme),
       textTheme: _textTheme(colorScheme.onSurface),
@@ -94,20 +94,22 @@ class AppTheme {
       backgroundColor: colorScheme.surface,
       foregroundColor: colorScheme.onSurface,
       surfaceTintColor: Colors.transparent,
-      titleTextStyle: const TextStyle(
+      titleTextStyle: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,
         letterSpacing: 0.5,
+        color: colorScheme.onSurface,
       ),
     );
   }
 
-  static CardThemeData _cardThemeData() {
+  static CardThemeData _cardThemeData(ColorScheme colorScheme) {
     return CardThemeData(
       elevation: 0,
+      color: colorScheme.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
-        side: const BorderSide(color: Colors.transparent),
+        side: BorderSide(color: colorScheme.outlineVariant.withOpacity(0.5)),
       ),
       margin: const EdgeInsets.only(bottom: 16),
       clipBehavior: Clip.antiAlias,

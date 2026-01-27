@@ -62,6 +62,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     bool isGuest = widget.userId == null;
 
     return SingleChildScrollView(
@@ -78,8 +79,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   children: [
                     CircleAvatar(
                       radius: 35,
-                      backgroundColor: Colors.blue.shade100,
-                      child: Icon(Icons.person, size: 35, color: Colors.blue.shade800),
+                      backgroundColor: colorScheme.primaryContainer,
+                      child: Icon(Icons.person, size: 35, color: colorScheme.onPrimaryContainer),
                     ),
                     const SizedBox(width: 20),
                     Expanded(
@@ -122,8 +123,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 if (!isGuest) ...[
                   ListTile(
                     leading: CircleAvatar(
-                      backgroundColor: Colors.blue.shade50,
-                      child: Icon(Icons.badge_outlined, color: Colors.blue.shade800),
+                      backgroundColor: colorScheme.primaryContainer.withOpacity(0.5),
+                      child: Icon(Icons.badge_outlined, color: colorScheme.primary),
                     ),
                     title: const Text("Your Profile", style: TextStyle(fontWeight: FontWeight.bold)),
                     subtitle: const Text("View your personal details"),
@@ -304,7 +305,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                       percentage = (int.tryParse(score) ?? 0) / (int.tryParse(total) ?? 1) * 100;
                                     }
                                     
-                                    Color modeColor = mode == 'Learn' ? Colors.blue : (mode == 'Practice' ? Colors.orange : Colors.red);
+                                    Color modeColor = mode == 'Learn' 
+                                        ? colorScheme.primary 
+                                        : (mode == 'Practice' ? colorScheme.secondary : colorScheme.error);
                                     IconData modeIcon = mode == 'Learn' ? Icons.school : (mode == 'Practice' ? Icons.fitness_center : Icons.quiz);
                                     
                                     return Padding(
@@ -322,7 +325,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                           if (mode == 'Learn')
                                             Icon(
                                               completed ? Icons.check_circle : Icons.circle_outlined,
-                                              color: completed ? Colors.green : Colors.grey,
+                                               color: completed ? const Color(0xFF2EC4B6) : colorScheme.outlineVariant,
                                               size: 18,
                                             )
                                           else

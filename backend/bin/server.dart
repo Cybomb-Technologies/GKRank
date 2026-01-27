@@ -191,7 +191,11 @@ void main() async {
   // --- USER PROGRESS & SYNC (NEW FEATURES) ---
   router.post('/user/save-progress', (Request request) async {
     final payload = jsonDecode(await request.readAsString());
-    final userId = payload['userId'];
+    final dynamic rawUserId = payload['userId'];
+    final String userId = (rawUserId is Map && rawUserId.containsKey('\$oid')) 
+        ? rawUserId['\$oid'].toString() 
+        : rawUserId.toString();
+        
     final topic = payload['topic'];
     // We can keep 'level' in payload if sent, but logic should rely on topic + mode.
     // Or if we want to support multiple "Quiz Attempts" per topic, we might need a unique ID.
@@ -209,7 +213,11 @@ void main() async {
   router.post('/user/sync', (Request request) async {
     try {
       final payload = jsonDecode(await request.readAsString());
-      final String userId = payload['userId'];
+      final dynamic rawUserId = payload['userId'];
+      final String userId = (rawUserId is Map && rawUserId.containsKey('\$oid')) 
+          ? rawUserId['\$oid'].toString() 
+          : rawUserId.toString();
+          
       final List<dynamic> localProgress = payload['progress'];
 
       final collection = db.collection('user_progress');
@@ -251,9 +259,25 @@ void main() async {
 
   router.post('/user/bookmarks/add', (Request request) async {
     final payload = jsonDecode(await request.readAsString());
+    final dynamic rawUserId = payload['userId'];
+    final String userId = (rawUserId is Map && rawUserId.containsKey('\$oid')) 
+        ? rawUserId['\$oid'].toString() 
+        : rawUserId.toString();
+        
+    final question = payload;
 
-    // This saves everything we sent (topic, level, questionText, etc.)
-    await db.collection('bookmarks').insertOne(payload);
+    // Standardize to user_bookmarks collection
+    await db.collection('user_bookmarks').update(
+      where.eq('userId', userId).and(
+        where.eq('question.id', question['id']?.toString()).or(where.eq('question._id', question['_id']?.toString()))
+      ),
+      {
+        'userId': userId,
+        'question': question,
+        'timestamp': DateTime.now().toIso8601String(),
+      },
+      upsert: true,
+    );
 
     return Response.ok(jsonEncode({'message': 'Bookmarked successfully'}));
   });
@@ -261,7 +285,11 @@ void main() async {
   // --- BOOKMARK MANAGEMENT ---
   router.post('/user/bookmark', (Request request) async {
     final payload = jsonDecode(await request.readAsString());
-    final userId = payload['userId'];
+    final dynamic rawUserId = payload['userId'];
+    final String userId = (rawUserId is Map && rawUserId.containsKey('\$oid')) 
+        ? rawUserId['\$oid'].toString() 
+        : rawUserId.toString();
+        
     final question = payload['question'];
     final questionId = (question['id'] ?? question['_id'])?.toString();
 
@@ -280,6 +308,7 @@ void main() async {
   });
 
   router.delete('/user/bookmark/<userId>/<questionId>', (Request request, String userId, String questionId) async {
+    // userId from URL is already a string
     await db.collection('user_bookmarks').remove(
       where.eq('userId', userId).and(
         where.eq('question.id', questionId).or(where.eq('question._id', questionId))
@@ -289,7 +318,10 @@ void main() async {
   });
 
   router.get('/user/bookmarks/<userId>', (Request request, String userId) async {
-    final results = await db.collection('user_bookmarks').find(where.eq('userId', userId)).toList();
+    // Robust query: check for String userId OR Map-based userId
+    final results = await db.collection('user_bookmarks').find(
+      where.eq('userId', userId).or(where.eq('userId', {'\$oid': userId}))
+    ).toList();
     // Return just the questions for the frontend
     final bookmarks = results.map((r) => r['question']).toList();
     return Response.ok(jsonEncode(bookmarks), headers: {'content-type': 'application/json'});
@@ -297,7 +329,11 @@ void main() async {
 
   router.post('/user/bookmarks/sync', (Request request) async {
     final payload = jsonDecode(await request.readAsString());
-    final String userId = payload['userId'];
+    final dynamic rawUserId = payload['userId'];
+    final String userId = (rawUserId is Map && rawUserId.containsKey('\$oid')) 
+        ? rawUserId['\$oid'].toString() 
+        : rawUserId.toString();
+        
     final List<dynamic> bookmarks = payload['bookmarks'];
 
     for (var b in bookmarks) {
@@ -320,7 +356,11 @@ void main() async {
   // --- LEVEL STATE SYNC (Answers) ---
   router.post('/user/level-state/sync', (Request request) async {
     final payload = jsonDecode(await request.readAsString());
-    final userId = payload['userId'];
+    final dynamic rawUserId = payload['userId'];
+    final String userId = (rawUserId is Map && rawUserId.containsKey('\$oid')) 
+        ? rawUserId['\$oid'].toString() 
+        : rawUserId.toString();
+        
     final states = payload['states']; // Map<String, dynamic> where key is topic_level_mode
 
     await db.collection('user_level_states').update(
@@ -585,4 +625,7 @@ void main() async {
 
   await io.serve(handler, '0.0.0.0', 8080);
   print('Server live at http://localhost:8080');
+
+  // await io.serve(handler, '0.0.0.0', 5021);
+  // print('Server live at http://localhost:5021');
 }

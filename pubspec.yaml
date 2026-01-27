@@ -70,6 +70,29 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/logos/gk_rank_icon_512x512.png"
+  remove_alpha_ios: true
+
+flutter_native_splash:
+  # --- Light Mode (Default) ---
+  color: "#EBEBEB" # background 0xFFEBEBEB
+  image: assets/logos/gk_rank_logo_960x960.png
+  android: true
+  ios: true
+
+  # --- Dark Mode (Global) ---
+  color_dark: "#0B141B" # backgroundDark
+
+  # --- Android 12+ (Adaptive Icons) ---
+  android_12:
+    color: "#EBEBEB"
+    image: assets/logos/gk_rank_logo_1052x1052.png
+    # Correct way to handle Android 12 dark mode:
+    color_dark: "#1E293B"
+
 # The following section is specific to Flutter packages.
 flutter:
 
@@ -81,6 +104,14 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - .env
+    - assets/logos/gk_rank_icon_512x512.png
+    - assets/logos/gk_rank_icon_t_512x512.png
+    - assets/logos/gk_rank_logo_300x50.png
+    - assets/logos/gk_rank_logo_960x960.png
+    - assets/logos/gk_rank_logo_1152x1152.png
+    - assets/logos/theme_color_palette.png
+    - assets/logos/google_logo_960.png
+    - assets/logos/gk_rank_logo_1052x1052.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

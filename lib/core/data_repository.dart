@@ -15,6 +15,18 @@ class DataRepository {
   static const String _keyUserData = 'user_data';
   static const String _keyTheme = 'app_theme';
 
+  static String parseId(dynamic rawId) {
+    if (rawId == null) return "";
+    if (rawId is String) return rawId;
+    if (rawId is Map) {
+      if (rawId.containsKey('\$oid')) return rawId['\$oid'].toString();
+      // Nested check for cases where the map itself is { "userId": { "$oid": "..." } }
+      if (rawId.containsKey('_id')) return parseId(rawId['_id']);
+      if (rawId.containsKey('id')) return parseId(rawId['id']);
+    }
+    return rawId.toString();
+  }
+
   /// Helper to get user-specific key
   Future<String> _getKey(String base) async {
     final prefs = await SharedPreferences.getInstance();
@@ -348,7 +360,8 @@ class DataRepository {
   /// Save full user session
   Future<void> saveUserSession(Map<String, dynamic> userData) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_keyUserId, userData['_id'] ?? "");
+    final String userId = parseId(userData['_id'] ?? userData['id']);
+    await prefs.setString(_keyUserId, userId);
     await prefs.setString(_keyUserData, jsonEncode(userData));
     await prefs.setBool(_keyIsLoggedIn, true);
   }
@@ -483,11 +496,13 @@ class DataRepository {
       
       for (var s in localStrings) {
         final data = jsonDecode(s) as Map<String, dynamic>;
-        merged[data['id'].toString()] = data;
+        final String qId = (data['id'] ?? data['_id'])?.toString() ?? "";
+        if (qId.isNotEmpty) merged[qId] = data;
       }
 
       for (var remote in remoteData) {
-        merged[remote['id'].toString()] = Map<String, dynamic>.from(remote);
+        final String qId = (remote['id'] ?? remote['_id'])?.toString() ?? "";
+        if (qId.isNotEmpty) merged[qId] = Map<String, dynamic>.from(remote);
       }
 
       await prefs.setStringList(key, merged.values.map((e) => jsonEncode(e)).toList());

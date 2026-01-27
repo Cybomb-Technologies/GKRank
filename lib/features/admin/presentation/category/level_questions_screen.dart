@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/api.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/premium_card.dart';
 
 class LevelQuestionsScreen extends StatefulWidget {
@@ -244,18 +245,18 @@ class _LevelQuestionsScreenState extends State<LevelQuestionsScreen> {
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: isCorrect 
-                        ? Colors.green.withOpacity(0.1) 
+                        ? const Color(0xFF2EC4B6).withOpacity(0.1) 
                         : colorScheme.surfaceVariant.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: isCorrect ? Colors.green.withOpacity(0.3) : Colors.transparent,
+                      color: isCorrect ? const Color(0xFF2EC4B6).withOpacity(0.3) : Colors.transparent,
                     ),
                   ),
                   child: Row(
                     children: [
                       Icon(
                         isCorrect ? Icons.check_circle_rounded : Icons.circle_outlined,
-                        color: isCorrect ? Colors.green : colorScheme.outline,
+                        color: isCorrect ? const Color(0xFF2EC4B6) : colorScheme.outline,
                         size: 20,
                       ),
                       const SizedBox(width: 12),
@@ -269,26 +270,25 @@ class _LevelQuestionsScreenState extends State<LevelQuestionsScreen> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.amber.withOpacity(0.1),
+                    border: Border.all(color: AppColors.brandOrange.withOpacity(0.2)),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.amber.withOpacity(0.2)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Row(
                         children: [
-                          Icon(Icons.lightbulb_rounded, size: 16, color: Colors.amber),
-                          SizedBox(width: 8),
-                          Text(
-                            "EXPLANATION",
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.amber,
-                              letterSpacing: 1.2,
-                            ),
+                        Icon(Icons.lightbulb_rounded, size: 16, color: AppColors.brandOrange),
+                        SizedBox(width: 8),
+                        Text(
+                          "EXPLANATION",
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.brandOrange,
+                            letterSpacing: 1.2,
                           ),
+                        ),
                         ],
                       ),
                       const SizedBox(height: 8),

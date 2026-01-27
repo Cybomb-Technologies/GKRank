@@ -107,7 +107,7 @@ class _UserListScreenState extends State<UserListScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: (isAdmin ? Colors.blue : Colors.orange).withOpacity(0.1),
+                    color: (isAdmin ? colorScheme.primary : colorScheme.secondary).withOpacity(0.1),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
@@ -115,14 +115,14 @@ class _UserListScreenState extends State<UserListScreen> {
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
-                      color: isAdmin ? Colors.blue : Colors.orange,
+                      color: isAdmin ? colorScheme.primary : colorScheme.secondary,
                     ),
                   ),
                 ),
               ],
             ),
             trailing: isAdmin
-                ? const Icon(Icons.verified_rounded, color: Colors.blue)
+                ? Icon(Icons.verified_rounded, color: colorScheme.primary)
                 : IconButton(
                     icon: Icon(Icons.delete_outline_rounded, color: colorScheme.error),
                     onPressed: () => _confirmDelete(userId),
@@ -136,21 +136,31 @@ class _UserListScreenState extends State<UserListScreen> {
   void _confirmDelete(String id) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Delete User?"),
-        content: const Text("This action cannot be undone."),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            onPressed: () {
-              Navigator.pop(context);
-              _deleteUser(id);
-            },
-            child: const Text("Delete", style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
+      builder: (context) {
+        final colorScheme = Theme
+            .of(context)
+            .colorScheme;
+        return AlertDialog(
+          title: const Text("Delete User?"),
+          content: const Text("This action cannot be undone."),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context),
+                child: const Text("Cancel")),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colorScheme.error,
+                foregroundColor: colorScheme.onError,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                _deleteUser(id);
+              },
+              child: const Text(
+                  "Delete", style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        );
+      }
     );
   }
 }

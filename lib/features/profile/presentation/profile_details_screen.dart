@@ -60,7 +60,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.password, color: Colors.blue),
+            leading: Icon(Icons.password, color: colorScheme.primary),
             title: const Text("Change Password"),
             subtitle: const Text("Update your login credentials"),
             trailing: const Icon(Icons.chevron_right),
@@ -76,12 +76,12 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
           const SizedBox(height: 24),
           Text(
             "Danger Zone", 
-            style: theme.textTheme.labelLarge?.copyWith(color: Colors.red, fontWeight: FontWeight.bold)
+            style: theme.textTheme.labelLarge?.copyWith(color: colorScheme.error, fontWeight: FontWeight.bold)
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.delete_forever, color: Colors.red),
-            title: const Text("Delete Account", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            leading: Icon(Icons.delete_forever, color: colorScheme.error),
+            title: Text("Delete Account", style: TextStyle(color: colorScheme.error, fontWeight: FontWeight.bold)),
             subtitle: const Text("Permanently remove all your data"),
             onTap: () {
               if (widget.userId != null) {
@@ -97,53 +97,61 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
   void _showDeleteAccountDialog(BuildContext context, String userId) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Delete Account?", style: TextStyle(color: Colors.red)),
-        content: const SingleChildScrollView(
-          child: Text(
-            "This will permanently delete your account, progress, and all saved data. This action cannot be undone.",
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              try {
-                final api = ApiService();
-                await api.deleteAccount(userId);
-                await _repo.wipeUserData(userId);
-                await _repo.clearSession();
-                
-                if (context.mounted) {
-                  Navigator.pop(context); // Close dialog
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => const UserLoginScreen()),
-                    (route) => false,
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Account deleted successfully")),
-                  );
-                }
-              } catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Failed to delete account: $e")),
-                  );
-                }
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
+      builder: (context) {
+        final colorScheme = Theme
+            .of(context)
+            .colorScheme;
+        return AlertDialog(
+          title: Text(
+              "Delete Account?", style: TextStyle(color: colorScheme.error)),
+          content: const SingleChildScrollView(
+            child: Text(
+              "This will permanently delete your account, progress, and all saved data. This action cannot be undone.",
             ),
-            child: const Text("Delete Forever"),
           ),
-        ],
-      ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                try {
+                  final api = ApiService();
+                  await api.deleteAccount(userId);
+                  await _repo.wipeUserData(userId);
+                  await _repo.clearSession();
+
+                  if (context.mounted) {
+                    Navigator.pop(context); // Close dialog
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const UserLoginScreen()),
+                          (route) => false,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text("Account deleted successfully")),
+                    );
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Failed to delete account: $e")),
+                    );
+                  }
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colorScheme.error,
+                foregroundColor: colorScheme.onError,
+              ),
+              child: const Text("Delete Forever"),
+            ),
+          ],
+        );
+      }
     );
   }
 

@@ -154,15 +154,16 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
   }
 
   Color _getCategoryColor(int index) {
+    final colorScheme = Theme.of(context).colorScheme;
     final colors = [
-      Colors.blue,
-      Colors.green,
-      Colors.orange,
-      Colors.purple,
-      Colors.red,
-      Colors.teal,
-      Colors.indigo,
-      Colors.pink,
+      colorScheme.primary,
+      colorScheme.secondary,
+      colorScheme.tertiary,
+      colorScheme.error,
+      colorScheme.primary.withOpacity(0.8),
+      colorScheme.secondary.withOpacity(0.8),
+      colorScheme.tertiary.withOpacity(0.8),
+      const Color(0xFF2EC4B6), // Brand Teal
     ];
     return colors[index % colors.length];
   }
