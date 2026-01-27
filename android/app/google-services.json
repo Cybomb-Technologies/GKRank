@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "2286440738",
+    "project_id": "gkrank",
+    "storage_bucket": "gkrank.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2286440738:android:9a0dd349cf867eae69157b",
+        "android_client_info": {
+          "package_name": "com.cybomb.gkrank"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "2286440738-ov8g3c92vao95llv0np24krhe4comms8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1J9GJOiiI5sMm1F8uBLBTrviZYKZglHU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "2286440738-ov8g3c92vao95llv0np24krhe4comms8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
