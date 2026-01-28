@@ -32,7 +32,7 @@ class DataRepository {
     final prefs = await SharedPreferences.getInstance();
     final String userId = prefs.getString(_keyUserId) ?? 'guest';
     final String key = "${base}_$userId";
-    print("DEBUG - DataRepository/_getKey : Accessing partition for User: $userId -> Key: $key");
+    //print("DEBUG - DataRepository/_getKey : Accessing partition for User: $userId -> Key: $key");
     return key;
   }
 
@@ -79,7 +79,7 @@ class DataRepository {
         try {
           await _api.saveUserProgress(progressData);
         } catch (e) {
-          print("Failed to sync progress: $e");
+          //print("Failed to sync progress: $e");
         }
       }
     }
@@ -178,9 +178,9 @@ class DataRepository {
       // After sync, we could clear guest data if you want, but user said "saved with that account"
       // Let's clear guest data to prevent double syncing next time
       await prefs.remove(guestKey);
-      print("DEBUG - DataRepository/syncLocalToRemote : Synced and cleared GUEST data to account $userId");
+      //print("DEBUG - DataRepository/syncLocalToRemote : Synced and cleared GUEST data to account $userId");
     } catch (e) {
-      print("DEBUG - DataRepository/syncLocalToRemote : Sync failed: $e");
+      //print("DEBUG - DataRepository/syncLocalToRemote : Sync failed: $e");
     }
   }
 
@@ -218,7 +218,7 @@ class DataRepository {
 
       await prefs.setStringList(key, merged.values.map((e) => jsonEncode(e)).toList());
     } catch (e) {
-      print("Fetch failed: $e");
+      //print("Fetch failed: $e");
     }
   }
 
@@ -300,9 +300,9 @@ class DataRepository {
     try {
       await _api.syncLevelState(userId, guestData);
       await prefs.remove(guestKey);
-      print("DEBUG - DataRepository/syncLevelStateToRemote : Success - Migrated guest states to $userId");
+      //print("DEBUG - DataRepository/syncLevelStateToRemote : Success - Migrated guest states to $userId");
     } catch (e) {
-      print("DEBUG - DataRepository/syncLevelStateToRemote : Error - $e");
+      //print("DEBUG - DataRepository/syncLevelStateToRemote : Error - $e");
     }
   }
 
@@ -327,9 +327,9 @@ class DataRepository {
       });
 
       await prefs.setString(key, jsonEncode(localData));
-      print("DEBUG - DataRepository/fetchLevelStatesToLocal : Success - Merged states for $userId");
+      //print("DEBUG - DataRepository/fetchLevelStatesToLocal : Success - Merged states for $userId");
     } catch (e) {
-      print("DEBUG - DataRepository/fetchLevelStatesToLocal : Error - $e");
+      //print("DEBUG - DataRepository/fetchLevelStatesToLocal : Error - $e");
     }
   }
   
@@ -340,7 +340,7 @@ class DataRepository {
     await prefs.remove(_keyUserId);
     await prefs.remove(_keyUserData);
     await prefs.setBool(_keyIsLoggedIn, false);
-    print("DEBUG - DataRepository/clearSession : Session Flags Cleared for $userId. Partition data PRESERVED.");
+    //print("DEBUG - DataRepository/clearSession : Session Flags Cleared for $userId. Partition data PRESERVED.");
   }
 
   /// Explicitly delete all local data for a specific user ID
@@ -354,7 +354,7 @@ class DataRepository {
     await prefs.remove(stateKey);
     await prefs.remove(bookmarkKey);
     
-    print("DEBUG - DataRepository/wipeUserData : ALL partition data DELETED for User: $userId");
+    //print("DEBUG - DataRepository/wipeUserData : ALL partition data DELETED for User: $userId");
   }
 
   /// Save full user session
@@ -378,7 +378,7 @@ class DataRepository {
   Future<void> saveTheme(ThemeMode mode) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_keyTheme, mode.toString());
-    print("DEBUG - DataRepository/saveTheme : Success - Set to $mode");
+    //print("DEBUG - DataRepository/saveTheme : Success - Set to $mode");
   }
 
   Future<ThemeMode> getTheme() async {
@@ -401,7 +401,7 @@ class DataRepository {
     final String qId = (questionData['id'] ?? questionData['_id'])?.toString() ?? "";
 
     if (qId.isEmpty) {
-      print("DEBUG - DataRepository/toggleBookmark : Error - Question ID is empty. Data: $questionData");
+      //print("DEBUG - DataRepository/toggleBookmark : Error - Question ID is empty. Data: $questionData");
       return;
     }
 
@@ -421,23 +421,23 @@ class DataRepository {
     if (isBookmarked) {
       // Remove
       bookmarks.removeWhere((item) => (jsonDecode(item)['id'] ?? jsonDecode(item)['_id'])?.toString() == qId);
-      print("DEBUG - DataRepository/toggleBookmark : Success - Removed locally ($qId)");
+      //print("DEBUG - DataRepository/toggleBookmark : Success - Removed locally ($qId)");
       if (online && userId != null) {
         try {
           await _api.removeBookmark(userId, qId);
         } catch (e) {
-          print("DEBUG - DataRepository/toggleBookmark : Error - Remote remove failed: $e");
+          //print("DEBUG - DataRepository/toggleBookmark : Error - Remote remove failed: $e");
         }
       }
     } else {
       // Add
       bookmarks.add(jsonEncode(enrichedData));
-      print("DEBUG - DataRepository/toggleBookmark : Success - Added locally ($qId)");
+      //print("DEBUG - DataRepository/toggleBookmark : Success - Added locally ($qId)");
       if (online && userId != null) {
         try {
           await _api.saveBookmark(userId, enrichedData);
         } catch (e) {
-          print("DEBUG - DataRepository/toggleBookmark : Error - Remote save failed: $e");
+          //print("DEBUG - DataRepository/toggleBookmark : Error - Remote save failed: $e");
         }
       }
     }
@@ -478,9 +478,9 @@ class DataRepository {
     try {
       await _api.syncBookmarks(userId, bookmarks);
       await prefs.remove(guestKey);
-      print("DEBUG - DataRepository/syncBookmarksToRemote : Success - Synced guest bookmarks to $userId");
+      //print("DEBUG - DataRepository/syncBookmarksToRemote : Success - Synced guest bookmarks to $userId");
     } catch (e) {
-      print("DEBUG - DataRepository/syncBookmarksToRemote : Error - $e");
+      //print("DEBUG - DataRepository/syncBookmarksToRemote : Error - $e");
     }
   }
 
@@ -506,9 +506,9 @@ class DataRepository {
       }
 
       await prefs.setStringList(key, merged.values.map((e) => jsonEncode(e)).toList());
-      print("DEBUG - DataRepository/fetchBookmarksToLocal : Success - Merged ${merged.length} bookmarks for $userId");
+      //print("DEBUG - DataRepository/fetchBookmarksToLocal : Success - Merged ${merged.length} bookmarks for $userId");
     } catch (e) {
-      print("DEBUG - DataRepository/fetchBookmarksToLocal : Error - $e");
+      //print("DEBUG - DataRepository/fetchBookmarksToLocal : Error - $e");
     }
   }
 }

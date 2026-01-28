@@ -44,7 +44,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           });
        }
      } catch (e) {
-       print("DEBUG - UserProfileScreen/_loadProfile : Error - $e");
+       //print("DEBUG - UserProfileScreen/_loadProfile : Error - $e");
      }
   }
 

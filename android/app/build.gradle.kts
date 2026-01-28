@@ -11,6 +11,15 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties")
+
+if (keystorePropertiesFile.exists()) {
+    FileInputStream(keystorePropertiesFile).use {
+        keystoreProperties.load(it)
+    }
+}
+
 android {
     namespace = "com.cybomb.gkrank"
     compileSdk = flutter.compileSdkVersion
@@ -42,24 +51,24 @@ android {
         multiDexEnabled = true
     }
 
-//    signingConfigs {
-//        create("release") {
-//            keyAlias = keystoreProperties.getProperty("keyAlias") as String
-//            keyPassword = keystoreProperties.getProperty("keyPassword") as String
-//            storeFile = keystoreProperties.getProperty("storeFile")?.let { file(it) }
-//            storePassword = keystoreProperties.getProperty("storePassword") as String
-//        }
-//    }
+    signingConfigs {
+        create("release") {
+            keyAlias = keystoreProperties.getProperty("keyAlias") as String
+            keyPassword = keystoreProperties.getProperty("keyPassword") as String
+            storeFile = keystoreProperties.getProperty("storeFile")?.let { file(it) }
+            storePassword = keystoreProperties.getProperty("storePassword") as String
+        }
+    }
 
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+//            signingConfig = signingConfigs.getByName("debug")
 
-//            signingConfig = signingConfigs.getByName("release")
-//            isMinifyEnabled = true // Note the 'is' prefix and '.set()' is often optional here, but use 'is'
-//            isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = true // Note the 'is' prefix and '.set()' is often optional here, but use 'is'
+            isShrinkResources = true
         }
     }
 }

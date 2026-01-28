@@ -11,34 +11,34 @@ class ApiService {
 
   // For user_register.dart
   Future<Response> register(String name, String email, String password) async {
-    print('DEBUG: Attempting API Register for: $email');
+    //print('DEBUG: Attempting API Register for: $email');
     try {
       final response = await _dio.post('/auth/register', data: {
         'name': name,
         'email': email,
         'password': password,
       });
-      print('DEBUG: API Register Success: ${response.statusCode}');
+      //print('DEBUG: API Register Success: ${response.statusCode}');
       return response;
     } on DioException catch (e) {
-      print('DEBUG: API Register Error: ${e.response?.statusCode} - ${e.response?.data}');
+      //print('DEBUG: API Register Error: ${e.response?.statusCode} - ${e.response?.data}');
       rethrow;
     }
   }
 
   // For user_login.dart
   Future<Response> login(String email, String password) async {
-    print('DEBUG: Attempting API Login to: ${_dio.options.baseUrl}/auth/login');
+    //print('DEBUG: Attempting API Login to: ${_dio.options.baseUrl}/auth/login');
     try {
       final response = await _dio.post('/auth/login', data: {
         'email': email,
         'password': password,
       });
-      print('DEBUG: API Response Received: ${response.statusCode} - Data: ${response.data}');
+      //print('DEBUG: API Response Received: ${response.statusCode} - Data: ${response.data}');
       return response;
     } on DioException catch (e) {
-      print('DEBUG: Dio Error: ${e.type} - Message: ${e.message}');
-      print('DEBUG: Response Data from Server: ${e.response?.data}');
+      //print('DEBUG: Dio Error: ${e.type} - Message: ${e.message}');
+      //print('DEBUG: Response Data from Server: ${e.response?.data}');
       rethrow;
     }
   }
@@ -57,7 +57,7 @@ class ApiService {
 
   Future<void> getData() async {
     final response = await _dio.get('/user/profile');
-    print(response.data);
+    //print(response.data);
   }
 
   Future<Response> getAllCategories() async {
@@ -98,26 +98,26 @@ class ApiService {
   }
 
   Future<Response> addQuestion(Map<String, dynamic> data) async {
-    print("DEBUG: API Service calling POST /admin/add-question");
+    //print("DEBUG: API Service calling POST /admin/add-question");
     try {
       final response = await _dio.post('/admin/add-question', data: data);
-      print("DEBUG: Dio success status -> ${response.statusCode}");
+      //print("DEBUG: Dio success status -> ${response.statusCode}");
       return response;
     } on DioException catch (e) {
-      print("DEBUG: Dio Error -> ${e.message}");
-      print("DEBUG: Dio Error Response -> ${e.response?.data}");
+      //print("DEBUG: Dio Error -> ${e.message}");
+      //print("DEBUG: Dio Error Response -> ${e.response?.data}");
       rethrow;
     }
   }
 
   Future<Response> getQuestions(String topic) async {
     // Use exact quotes to see if 'topic' contains hidden spaces
-    print("DEBUG: API - Requesting Questions for Topic: '$topic'");
+    //print("DEBUG: API - Requesting Questions for Topic: '$topic'");
 
     final response = await _dio.get('/admin/questions/$topic');
 
-    print("DEBUG: API - getQuestions Response Status: ${response.statusCode}");
-    print("DEBUG: API - getQuestions Raw Data: ${response.data}"); 
+    //print("DEBUG: API - getQuestions Response Status: ${response.statusCode}");
+    //print("DEBUG: API - getQuestions Raw Data: ${response.data}"); 
     return response;
   }
 
@@ -134,146 +134,146 @@ class ApiService {
   }
 
   Future<Response> saveBookmark(String userId, Map<String, dynamic> questionData) async {
-    print("DEBUG - ApiService/saveBookmark : Attempting to save bookmark for user $userId");
+    //print("DEBUG - ApiService/saveBookmark : Attempting to save bookmark for user $userId");
     try {
       final response = await _dio.post('/user/bookmark', data: {
         'userId': userId,
         'question': questionData,
       });
-      print("DEBUG - ApiService/saveBookmark : Success - ${response.statusCode}");
+      //print("DEBUG - ApiService/saveBookmark : Success - ${response.statusCode}");
       return response;
     } on DioException catch (e) {
-      print("DEBUG - ApiService/saveBookmark : Error - ${e.message}");
+      //print("DEBUG - ApiService/saveBookmark : Error - ${e.message}");
       rethrow;
     }
   }
 
   Future<Response> removeBookmark(String userId, String questionId) async {
-    print("DEBUG - ApiService/removeBookmark : Attempting to remove bookmark $questionId for user $userId");
+    //print("DEBUG - ApiService/removeBookmark : Attempting to remove bookmark $questionId for user $userId");
     try {
       final response = await _dio.delete('/user/bookmark/$userId/$questionId');
-      print("DEBUG - ApiService/removeBookmark : Success - ${response.statusCode}");
+      //print("DEBUG - ApiService/removeBookmark : Success - ${response.statusCode}");
       return response;
     } on DioException catch (e) {
-      print("DEBUG - ApiService/removeBookmark : Error - ${e.message}");
+      //print("DEBUG - ApiService/removeBookmark : Error - ${e.message}");
       rethrow;
     }
   }
 
   Future<Response> getUserBookmarks(String userId) async {
-    print("DEBUG - ApiService/getUserBookmarks : Fetching bookmarks for user $userId");
+    //print("DEBUG - ApiService/getUserBookmarks : Fetching bookmarks for user $userId");
     try {
       final response = await _dio.get('/user/bookmarks/$userId');
-      print("DEBUG - ApiService/getUserBookmarks : Success - ${response.statusCode}");
+      //print("DEBUG - ApiService/getUserBookmarks : Success - ${response.statusCode}");
       return response;
     } on DioException catch (e) {
-      print("DEBUG - ApiService/getUserBookmarks : Error - ${e.message}");
+      //print("DEBUG - ApiService/getUserBookmarks : Error - ${e.message}");
       rethrow;
     }
   }
 
   Future<Response> syncBookmarks(String userId, List<Map<String, dynamic>> bookmarks) async {
-    print("DEBUG - ApiService/syncBookmarks : Syncing ${bookmarks.length} bookmarks for user $userId");
+    //print("DEBUG - ApiService/syncBookmarks : Syncing ${bookmarks.length} bookmarks for user $userId");
     try {
       final response = await _dio.post('/user/bookmarks/sync', data: {
         'userId': userId,
         'bookmarks': bookmarks,
       });
-      print("DEBUG - ApiService/syncBookmarks : Success - ${response.statusCode}");
+      //print("DEBUG - ApiService/syncBookmarks : Success - ${response.statusCode}");
       return response;
     } on DioException catch (e) {
-      print("DEBUG - ApiService/syncBookmarks : Error - ${e.message}");
+      //print("DEBUG - ApiService/syncBookmarks : Error - ${e.message}");
       rethrow;
     }
   }
 
   Future<Response> googleLogin(String email, String name, String googleId) async {
-    print("DEBUG - ApiService/googleLogin : Attempting Google login for $email");
+    //print("DEBUG - ApiService/googleLogin : Attempting Google login for $email");
     try {
       final response = await _dio.post('/auth/google-login', data: {
         'email': email,
         'name': name,
         'googleId': googleId,
       });
-      print("DEBUG - ApiService/googleLogin : Success - ${response.statusCode}");
+      //print("DEBUG - ApiService/googleLogin : Success - ${response.statusCode}");
       return response;
     } on DioException catch (e) {
-      print("DEBUG - ApiService/googleLogin : Error - ${e.message}");
+      //print("DEBUG - ApiService/googleLogin : Error - ${e.message}");
       rethrow;
     }
   }
 
   Future<Response> googleSignup(String email, String name, String googleId) async {
-    print("DEBUG - ApiService/googleSignup : Attempting Google signup for $email");
+    //print("DEBUG - ApiService/googleSignup : Attempting Google signup for $email");
     try {
       final response = await _dio.post('/auth/google-signup', data: {
         'email': email,
         'name': name,
         'googleId': googleId,
       });
-      print("DEBUG - ApiService/googleSignup : Success - ${response.statusCode}");
+      //print("DEBUG - ApiService/googleSignup : Success - ${response.statusCode}");
       return response;
     } on DioException catch (e) {
-      print("DEBUG - ApiService/googleSignup : Error - ${e.message}");
+      //print("DEBUG - ApiService/googleSignup : Error - ${e.message}");
       rethrow;
     }
   }
 
   Future<Response> forgotPassword(String email) async {
-    print("DEBUG - ApiService/forgotPassword : Requesting reset for $email");
+    //print("DEBUG - ApiService/forgotPassword : Requesting reset for $email");
     try {
       final response = await _dio.post('/auth/forgot-password', data: {'email': email});
-      print("DEBUG - ApiService/forgotPassword : Success - ${response.statusCode}");
+      //print("DEBUG - ApiService/forgotPassword : Success - ${response.statusCode}");
       return response;
     } on DioException catch (e) {
-      print("DEBUG - ApiService/forgotPassword : Error - ${e.message}");
+      //print("DEBUG - ApiService/forgotPassword : Error - ${e.message}");
       rethrow;
     }
   }
 
   Future<Response> verifyOtp(String email, String otp) async {
-    print("DEBUG - ApiService/verifyOtp : Verifying code for $email");
+    //print("DEBUG - ApiService/verifyOtp : Verifying code for $email");
     try {
       final response = await _dio.post('/auth/verify-otp', data: {
         'email': email,
         'otp': otp,
       });
-      print("DEBUG - ApiService/verifyOtp : Success - ${response.statusCode}");
+      //print("DEBUG - ApiService/verifyOtp : Success - ${response.statusCode}");
       return response;
     } on DioException catch (e) {
-      print("DEBUG - ApiService/verifyOtp : Error - ${e.message}");
+      //print("DEBUG - ApiService/verifyOtp : Error - ${e.message}");
       rethrow;
     }
   }
 
   Future<Response> resetPassword(String email, String otp, String newPassword) async {
-    print("DEBUG - ApiService/resetPassword : Updating password for $email");
+    //print("DEBUG - ApiService/resetPassword : Updating password for $email");
     try {
       final response = await _dio.post('/auth/reset-password', data: {
         'email': email,
         'otp': otp,
         'password': newPassword,
       });
-      print("DEBUG - ApiService/resetPassword : Success - ${response.statusCode}");
+      //print("DEBUG - ApiService/resetPassword : Success - ${response.statusCode}");
       return response;
     } on DioException catch (e) {
-      print("DEBUG - ApiService/resetPassword : Error - ${e.message}");
+      //print("DEBUG - ApiService/resetPassword : Error - ${e.message}");
       rethrow;
     }
   }
 
   Future<Response> changePassword(String userId, String currentPassword, String newPassword) async {
-    print("DEBUG - ApiService/changePassword : Changing password for user $userId");
+    //print("DEBUG - ApiService/changePassword : Changing password for user $userId");
     try {
       final response = await _dio.post('/auth/change-password', data: {
         'userId': userId,
         'currentPassword': currentPassword,
         'newPassword': newPassword,
       });
-      print("DEBUG - ApiService/changePassword : Success - ${response.statusCode}");
+      //print("DEBUG - ApiService/changePassword : Success - ${response.statusCode}");
       return response;
     } on DioException catch (e) {
-      print("DEBUG - ApiService/changePassword : Error - ${e.message}");
+      //print("DEBUG - ApiService/changePassword : Error - ${e.message}");
       rethrow;
     }
   }
