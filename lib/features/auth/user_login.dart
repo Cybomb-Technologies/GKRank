@@ -70,7 +70,7 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
       if (e is DioException && e.response?.data != null) {
         errorMsg = e.response?.data['error'] ?? errorMsg;
       }
-      print('DEBUG: _handleLogin caught error: $e');
+      //print('DEBUG: _handleLogin caught error: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(errorMsg)),
@@ -80,11 +80,11 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
   }
 
   void _handleGoogleAuth({required bool isLogin}) async {
-    print("DEBUG - UserLoginScreen/_handleGoogleAuth : Initiating Real Google Sign-In");
+    //print("DEBUG - UserLoginScreen/_handleGoogleAuth : Initiating Real Google Sign-In");
     try {
       final GoogleSignInAccount? account = await _googleSignIn.signIn();
       if (account == null) {
-        print("DEBUG - UserLoginScreen/_handleGoogleAuth : User cancelled sign-in");
+        //print("DEBUG - UserLoginScreen/_handleGoogleAuth : User cancelled sign-in");
         return;
       }
 
@@ -92,7 +92,7 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
       final String name = account.displayName ?? "Google User";
       final String googleId = account.id;
 
-      print("DEBUG - UserLoginScreen/_handleGoogleAuth : Account Retrieved - Email: $email, Name: $name, GoogleID: $googleId");
+      //print("DEBUG - UserLoginScreen/_handleGoogleAuth : Account Retrieved - Email: $email, Name: $name, GoogleID: $googleId");
 
       final response = isLogin
           ? await _apiService.googleLogin(email, name, googleId)
@@ -103,7 +103,7 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
         _processUserData(userData);
       }
     } catch (e) {
-      print("DEBUG - UserLoginScreen/_handleGoogleAuth : Error - $e");
+      //print("DEBUG - UserLoginScreen/_handleGoogleAuth : Error - $e");
       if (mounted) {
         String msg = isLogin ? "Login failed. Please check your account." : "Signup failed (Account may already exist).";
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));

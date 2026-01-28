@@ -55,11 +55,11 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
   }
 
   void _handleGoogleSignup() async {
-    print("DEBUG - UserRegisterScreen/_handleGoogleSignup : Initiating Real Google Sign-In");
+    //print("DEBUG - UserRegisterScreen/_handleGoogleSignup : Initiating Real Google Sign-In");
     try {
       final GoogleSignInAccount? account = await _googleSignIn.signIn();
       if (account == null) {
-        print("DEBUG - UserRegisterScreen/_handleGoogleSignup : User cancelled signup");
+        //print("DEBUG - UserRegisterScreen/_handleGoogleSignup : User cancelled signup");
         return;
       }
 
@@ -67,7 +67,7 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
       final String name = account.displayName ?? "Google User";
       final String googleId = account.id;
 
-      print("DEBUG - UserRegisterScreen/_handleGoogleSignup : Account Retrieved - Email: $email, Name: $name, GoogleID: $googleId");
+      //print("DEBUG - UserRegisterScreen/_handleGoogleSignup : Account Retrieved - Email: $email, Name: $name, GoogleID: $googleId");
 
       final response = await _apiService.googleSignup(email, name, googleId);
       final userData = response.data;
@@ -75,7 +75,7 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
         _processUserData(userData);
       }
     } catch (e) {
-      print("DEBUG - UserRegisterScreen/_handleGoogleSignup : Error - $e");
+      //print("DEBUG - UserRegisterScreen/_handleGoogleSignup : Error - $e");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Account already exists or signup failed.")));
       }

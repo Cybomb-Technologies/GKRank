@@ -31,20 +31,20 @@ class _LevelQuestionsScreenState extends State<LevelQuestionsScreen> {
   void _fetchQuestions() async {
     setState(() => _isLoading = true);
 
-    print("DEBUG: UI - Calling getQuestions with Topic: '${widget.topic}'");
+    //print("DEBUG: UI - Calling getQuestions with Topic: '${widget.topic}'");
 
     try {
       final response = await _apiService.getQuestions(widget.topic);
 
-      print("DEBUG: UI - Response Status Code: ${response.statusCode}");
-      print("DEBUG: UI - Response Data Length: ${response.data.length}");
+      //print("DEBUG: UI - Response Status Code: ${response.statusCode}");
+      //print("DEBUG: UI - Response Data Length: ${response.data.length}");
 
       setState(() {
         _questions = response.data is List ? response.data : [];
         _isLoading = false;
       });
     } catch (e) {
-      print("DEBUG: UI ERROR - Failed to fetch: $e");
+      //print("DEBUG: UI ERROR - Failed to fetch: $e");
       setState(() => _isLoading = false);
     }
   }
@@ -130,7 +130,7 @@ class _LevelQuestionsScreenState extends State<LevelQuestionsScreen> {
                   _fetchQuestions(); 
                 }
               } catch (e) {
-                print("DEBUG: Error in UI during save -> $e");
+                //print("DEBUG: Error in UI during save -> $e");
               }
             },
             child: const Text("Save Question"),

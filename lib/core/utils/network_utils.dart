@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 class NetworkUtils {
   /// Flag to switch between production and development.
   /// Set this to [true] for production, [false] for local development.
-  static const bool isProduction = false;
+  static const bool isProduction = true;
 
   // Live production URL
   static const String _liveBaseUrl = 'https://gkrank.cybomb.com'; // for Backend both web and App APIs
@@ -30,4 +30,13 @@ class NetworkUtils {
 
   /// Helpful getter to check current environment
   static String get currentEnvironment => isProduction ? 'Production' : 'Local';
+
+  static void printConfig() {
+    //print('DEBUG: --- Network Configuration ---');
+    //print('DEBUG: isProduction: $isProduction');
+    //print('DEBUG: kIsWeb: $kIsWeb');
+    //print('DEBUG: Current Base URL: $baseUrl');
+    //print('DEBUG: Environment: $currentEnvironment');
+    //print('DEBUG: -----------------------------');
+  }
 }

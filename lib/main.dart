@@ -1,5 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'core/utils/network_utils.dart';
 import 'core/services/flutter_push_notification_service.dart';
 import 'features/admin/presentation/admin_main_screen.dart';
 import 'features/main/presentation/user_main_screen.dart';
@@ -14,6 +16,7 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  NetworkUtils.printConfig();
   await dotenv.load(fileName: ".env");
   await ThemeController.initialize();
 
@@ -27,10 +30,10 @@ void main() async {
       FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
       await NotificationService().initialize();
     } else {
-      print("DEBUG: Firebase initialized on Web. Skipping mobile notification setup.");
+      //print("DEBUG: Firebase initialized on Web. Skipping mobile notification setup.");
     }
   } catch (e) {
-    print("WARNING: Firebase Initialization Failed: $e");
+    //print("WARNING: Firebase Initialization Failed: $e");
     // App continues so UI can render even if notifications fail
   }
 

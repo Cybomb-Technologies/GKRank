@@ -7,7 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 // --- TOP-LEVEL HANDLER FOR BACKGROUND MESSAGES (Must be outside the class) ---
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print("Handling a background message: ${message.messageId}");
+  //print("Handling a background message: ${message.messageId}");
 }
 
 // ADD THIS TOP-LEVEL FUNCTION
@@ -15,7 +15,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void notificationTapBackground(NotificationResponse notificationResponse) {
   // This runs when the app is in the background or terminated and the user taps a notification.
   if (notificationResponse.payload != null) {
-    print('Background notification response handled. Payload: ${notificationResponse.payload}');
+    //print('Background notification response handled. Payload: ${notificationResponse.payload}');
     // Add your navigation or logic here
   }
 }
@@ -39,7 +39,7 @@ class NotificationService {
     await _requestPermissions();
 
     String? fcmToken = await _firebaseMessaging.getToken();
-    print("FCM Token: $fcmToken");
+    //print("FCM Token: $fcmToken");
 
     await _initializeLocalNotifications();
 
@@ -58,7 +58,7 @@ class NotificationService {
       provisional: false,
       sound: true,
     );
-    print('User granted permission: ${settings.authorizationStatus}');
+    //print('User granted permission: ${settings.authorizationStatus}');
   }
 
   Future<void> _initializeLocalNotifications() async {
@@ -95,7 +95,7 @@ class NotificationService {
   void _handleMessage(RemoteMessage message) {
     // This is where you would handle navigation or other logic based on the notification data.
     // For now, we'll just print the data.
-    print('Handling message for app launch/open: ${message.data}');
+    //print('Handling message for app launch/open: ${message.data}');
     // You might use a global key here to access the navigator
     // Example: Navigator.of(MyNavigationService.navigatorKey.currentContext!).pushNamed(
     //   '/notification-detail',
@@ -107,7 +107,7 @@ class NotificationService {
   // --- 2. Handlers for Notification Clicks/Taps ---
   void _onDidReceiveNotificationResponse(NotificationResponse notificationResponse) {
     if (notificationResponse.payload != null) {
-      print('Notification payload: ${notificationResponse.payload}');
+      //print('Notification payload: ${notificationResponse.payload}');
       // You can implement navigation based on the payload data here
     }
   }
@@ -129,11 +129,11 @@ class NotificationService {
   void _setupMessageHandlers() {
     // Foreground messages (app is open)
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
+      //print('Got a message whilst in the foreground!');
+      //print('Message data: ${message.data}');
 
       if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
+        //print('Message also contained a notification: ${message.notification}');
 
         // Show the foreground notification using flutter_local_notifications
         _showLocalNotification(message);

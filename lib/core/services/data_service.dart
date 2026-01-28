@@ -17,9 +17,9 @@ class DataService {
     if (userId != null) {
       try {
         await _apiService.syncUserData(userId, data);
-        print("Synced with DB");
+        //print("Synced with DB");
       } catch (e) {
-        print("Offline: Saved locally only. Will sync later.");
+        //print("Offline: Saved locally only. Will sync later.");
       }
     }
   }
